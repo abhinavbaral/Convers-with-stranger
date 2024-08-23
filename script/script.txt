@@ -1,0 +1,54 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const chatBox = document.getElementById('chat-box');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-button');
+    const simulatedResponseDelay = 2000; // Delay in milliseconds for simulated response
+
+    // Function to create and append a message
+    function appendMessage(sender, text) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message');
+        
+        const senderDiv = document.createElement('div');
+        senderDiv.classList.add('sender');
+        senderDiv.textContent = sender;
+
+        const textDiv = document.createElement('div');
+        textDiv.classList.add('message-text');
+        textDiv.textContent = text;
+
+        messageDiv.appendChild(senderDiv);
+        messageDiv.appendChild(textDiv);
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight; // Scroll to bottom
+    }
+
+    // Function to simulate a response
+    function simulateResponse() {
+        setTimeout(() => {
+            appendMessage('The Dodo', 'Sorry, no one is available right now. How can I help you?');
+        }, simulatedResponseDelay);
+    }
+
+    sendButton.addEventListener('click', () => {
+        const messageText = messageInput.value.trim();
+        if (messageText !== '') {
+            appendMessage('User', messageText);
+            messageInput.value = '';
+
+            // Simulate a response if chat is empty
+            simulateResponse();
+        }
+    });
+
+    // Optional: Automatically simulate a response if no messages are received for a while
+    let inactivityTimeout;
+    function resetInactivityTimeout() {
+        clearTimeout(inactivityTimeout);
+        inactivityTimeout = setTimeout(simulateResponse, simulatedResponseDelay);
+    }
+
+    document.addEventListener('mousemove', resetInactivityTimeout);
+    document.addEventListener('keypress', resetInactivityTimeout);
+});
+
